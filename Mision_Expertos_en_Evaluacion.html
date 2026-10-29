@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Misión: Expertos en Evaluación</title>
+<style>
+:root {
+  --site-primary: #174a8b;
+  --site-on-primary: #ffffff;
+  --site-secondary: #e7f4ff;
+  --site-on-secondary: #15324f;
+  --site-background: #f4f8fc;
+  --site-on-background: #17283b;
+  --site-font-body: "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
+  --site-font-heading: "Arial Rounded MT Bold", "Trebuchet MS", "Segoe UI", sans-serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+  --surface: #ffffff;
+  --border: #d5e1ee;
+  --muted: #52677e;
+  --good: #16794b;
+  --bad: #b53636;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--site-font-body); color: var(--site-on-background); background: var(--site-background); letter-spacing:.01em; }
+#app { min-height: 100vh; width: 100%; background-color: var(--site-background); color: var(--site-on-background); border-radius: 0; }
+.hero { background: var(--site-primary); color: var(--site-on-primary); padding: calc(30px * var(--site-spacing-scale)) max(20px, calc((100vw - 1050px)/2)); position: relative; overflow: hidden; }
+.hero:after { content:""; position:absolute; width:230px; height:230px; border:26px solid rgba(255,255,255,.10); border-radius:50%; right:6%; top:-100px; pointer-events:none; opacity:var(--site-decoration-opacity); }
+.eyebrow { font-weight:800; letter-spacing:.12em; text-transform:uppercase; font-size:.76rem; opacity:.86; }
+h1,h2,h3 { font-family:var(--site-font-heading); margin-top:0; letter-spacing:-.025em; font-weight:900; }
+h1 { font-size:calc(clamp(2rem, 4vw, 3.25rem) * var(--site-heading-scale)); margin:9px 0 10px; line-height:1.05; }
+.hero p { max-width:730px; line-height:1.55; margin:0; color:#e9f3ff; }
+.wrap { width:min(1050px, calc(100% - 32px)); margin:24px auto 48px; }
+.topline { display:flex; gap:12px; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:18px; }
+.pill { border:1px solid var(--border); background:var(--surface); padding:9px 13px; border-radius:999px; font-weight:750; font-size:.9rem; }
+.progress { height:9px; background:#dce7f3; border-radius:999px; overflow:hidden; margin:14px 0 22px; }
+.progress > div { height:100%; width:0; background:#f0a62d; transition:width .25s ease; }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:calc(22px * var(--site-radius-scale)); padding:clamp(20px, 4vw, 34px); box-shadow:0 10px 30px rgba(20,54,90,.07); }
+.stage-label { display:inline-flex; background:var(--site-secondary); color:var(--site-on-secondary); padding:8px 12px; border-radius:10px; font-size:.84rem; font-weight:900; letter-spacing:.025em; margin-bottom:15px; }
+.question { font-size:clamp(1.2rem, 2.7vw, 1.55rem); line-height:1.45; margin:0 0 22px; font-weight:800; }
+.options { display:grid; gap:12px; }
+.option { text-align:left; border:2px solid var(--border); background:var(--surface); color:var(--site-on-background); border-radius:13px; padding:15px 16px; font:inherit; font-weight:650; line-height:1.5; cursor:pointer; transition:border-color .15s, background .15s, transform .15s; display:flex; gap:12px; align-items:flex-start; }
+.option:hover:not(:disabled) { border-color:var(--site-primary); transform:translateY(-1px); }
+.option:focus-visible, .btn:focus-visible { outline:3px solid #f0a62d; outline-offset:3px; }
+.letter { flex:0 0 29px; height:29px; display:grid; place-items:center; border-radius:8px; background:#edf3f9; color:#24476c; font-weight:850; }
+.option.correct { border-color:#249764; background:#effaf4; }
+.option.incorrect { border-color:#d55c5c; background:#fff3f3; }
+.option:disabled { cursor:default; }
+.feedback { margin-top:18px; padding:16px 18px; border-radius:12px; line-height:1.5; display:none; }
+.feedback.show { display:block; }
+.feedback.good { background:#eaf8f0; border:1px solid #b7e4ca; color:#135d39; }
+.feedback.bad { background:#fff1f1; border:1px solid #f0c5c5; color:#812a2a; }
+.actions { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:22px; }
+.btn { border:0; border-radius:11px; padding:13px 18px; font:inherit; font-weight:800; cursor:pointer; }
+.btn.primary { background:var(--site-primary); color:white; }
+.btn.secondary { background:var(--site-secondary); color:var(--site-on-secondary); border:1px solid var(--border); }
+.btn:disabled { opacity:.45; cursor:not-allowed; }
+.intro-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:22px 0; }
+.mission { border:1px solid var(--border); border-radius:16px; padding:18px; background:var(--surface); }
+.mission .icon { font-size:1.8rem; margin-bottom:8px; }
+.mission h3 { margin-bottom:7px; font-size:1.05rem; }
+.mission p { color:var(--muted); line-height:1.45; margin:0; font-size:.94rem; }
+.result-score { font-size:clamp(2.5rem, 8vw, 4.5rem); font-weight:900; color:var(--site-primary); margin:5px 0; }
+.result-summary { background:var(--site-secondary); border-radius:14px; padding:16px; margin:20px 0; }
+.review-list { display:grid; gap:10px; margin-top:18px; }
+.review-item { border:1px solid var(--border); border-radius:12px; padding:14px; }
+.review-item strong { display:block; margin-bottom:5px; }
+.mode-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin:22px 0; }
+.mode-card { border:1px solid var(--border); border-radius:18px; padding:22px; background:var(--surface); display:flex; flex-direction:column; align-items:flex-start; }
+.mode-card .icon { font-size:2.25rem; margin-bottom:8px; }
+.mode-card p { color:var(--muted); line-height:1.5; flex:1; }
+.tag { display:inline-block; padding:5px 9px; border-radius:999px; background:var(--site-secondary); color:var(--site-on-secondary); font-size:.78rem; font-weight:800; margin-bottom:10px; }
+.clue-box { background:var(--site-secondary); color:var(--site-on-secondary); border-radius:13px; padding:15px; margin:16px 0; line-height:1.5; }
+.registration-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin:22px 0; }
+.field { display:flex; flex-direction:column; gap:7px; font-weight:750; }
+.field input,.field select { width:100%; padding:13px 14px; border:1px solid var(--border); border-radius:10px; font:inherit; color:var(--site-on-background); background:var(--surface); }
+.field input:focus,.field select:focus { outline:3px solid #f0a62d; outline-offset:2px; }
+.room-locks { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:18px 0; }
+.lock { text-align:center; border:1px solid var(--border); border-radius:12px; padding:12px 8px; background:var(--surface); }
+.lock strong { display:block; font-size:1.25rem; margin-bottom:4px; }
+.lock span { color:var(--muted); font-size:.82rem; }
+.option-note { color:var(--muted); font-size:.86rem; margin-top:12px; }
+.small { color:var(--muted); font-size:.9rem; line-height:1.5; }
+footer { color:var(--muted); font-size:.82rem; line-height:1.5; text-align:center; margin:18px 0 0; }
+@media (max-width:700px) { .intro-grid,.mode-grid,.registration-grid { grid-template-columns:1fr; } .room-locks { grid-template-columns:1fr; } .hero { padding:28px 20px; } .wrap { width:calc(100% - 22px); margin-top:14px; } .card { padding:19px; } .actions .btn { flex:1; } }
+@media (prefers-color-scheme: dark) {
+ :root { --surface:#172638; --site-background:#101b29; --site-on-background:#edf4fb; --site-secondary:#233c55; --site-on-secondary:#eaf4ff; --border:#344b63; --muted:#bdcddd; }
+ .progress { background:#2b3c50; } .letter { background:#2c425a; color:#e7f3ff; }
+ .option.correct { background:#173c2c; } .option.incorrect { background:#482626; }
+ .feedback.good { background:#173c2c; color:#c6f4d8; border-color:#2a7650; }
+ .feedback.bad { background:#482626; color:#ffd7d7; border-color:#884040; }
+ .result-summary { background:#233c55; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="hero">
+    <div class="eyebrow">Juego de aprendizaje · Formación docente</div>
+    <h1>🧭 Misión: Expertos en Evaluación</h1>
+    <p>Supera los desafíos sobre la prueba de pareamiento y la prueba de alternativa constante (Verdadero/Falso). Lee con atención, analiza cada situación y elige la mejor respuesta.</p>
+  </header>
+  <main class="wrap" id="main"></main>
+</div>
+<script>
+const questions = [
+ {stage:"Misión 1 · Pareamiento", topic:"Normas de elaboración", q:"Al preparar una prueba de pareamiento para evaluar conceptos de una unidad, ¿cómo conviene organizar los elementos de las dos columnas?", options:[
+  "Reunir elementos del mismo tipo, indicar el criterio de relación y redactar instrucciones precisas para responder.",
+  "Combinar contenidos de varias unidades, dejar implícito el criterio y permitir que cada alumno interprete la consigna.",
+  "Presentar conceptos de distinta naturaleza, evitar una instrucción específica y ordenar ambas columnas de manera idéntica.",
+  "Usar elementos sin relación temática, explicar el criterio después del ejercicio y permitir respuestas con cualquier formato."
+ ], correct:0, why:"El material indica que los elementos y las relaciones deben ser del mismo tipo y naturaleza, con instrucciones claras acerca de cómo responder."},
+ {stage:"Misión 1 · Pareamiento", topic:"Cantidad de elementos", q:"Según las normas del material, ¿qué cantidad de premisas y respuestas se sugiere como máximo y cómo se recomienda manejar los distractores?", options:[
+  "Utilizar hasta diez premisas y respuestas, e incluir aproximadamente un cincuenta por ciento más de distractores en la columna de respuestas.",
+  "Utilizar hasta quince premisas y respuestas, e incluir aproximadamente la misma cantidad de distractores que de preguntas.",
+  "Utilizar entre tres y cinco premisas y respuestas, e incluir menos distractores para reducir la lectura del ejercicio.",
+  "Utilizar más de quince premisas y respuestas, e incluir un distractor únicamente cuando haya conceptos difíciles de asociar."
+ ], correct:0, why:"El documento recomienda entre ocho y diez elementos como máximo e incluir un 50 % más de distractores en la columna de respuestas."},
+ {stage:"Misión 1 · Pareamiento", topic:"Organización", q:"Una docente quiere facilitar que el estudiante relacione las columnas sin recibir pistas involuntarias. ¿Qué decisión se ajusta mejor a las normas?", options:[
+  "Ordenar una columna alfabética, cronológica o lógicamente, evitar indicios y mantener todo el ítem en una misma página.",
+  "Ordenar ambas columnas en correspondencia directa, repetir términos clave y separar las respuestas en una página posterior.",
+  "Colocar las respuestas según la dificultad, repetir parte de cada premisa y distribuir el ejercicio en varias páginas.",
+  "Mezclar elementos sin criterio de orden, destacar visualmente las respuestas correctas y dejar las instrucciones para el final."
+ ], correct:0, why:"El material aconseja ordenar una de las columnas con un criterio lógico, evitar pistas y mantener el ítem completo en una página."},
+ {stage:"Misión 1 · Pareamiento", topic:"Ventajas y desventajas", q:"¿Cuál de las siguientes opciones reúne una ventaja y una limitación de las pruebas de pareamiento señaladas en el material?", options:[
+  "Permiten evaluar muchas asociaciones en poco tiempo, pero no son adecuadas para medir aprendizajes complejos como el juicio crítico.",
+  "Permiten medir directamente el juicio crítico, pero solo pueden utilizarse para recordar fechas, nombres y definiciones aisladas.",
+  "Son difíciles de corregir objetivamente, pero permiten evaluar análisis y síntesis con mayor profundidad que otros instrumentos.",
+  "Evitan por completo las pistas involuntarias, pero requieren que cada alumno redacte una explicación extensa para cada asociación."
+ ], correct:0, why:"Entre las ventajas, el texto menciona evaluar mucha información en poco tiempo. Entre las limitaciones, señala que no son adecuadas para resultados complejos como análisis, síntesis, organización o juicio crítico."},
+ {stage:"Misión 1 · Pareamiento", topic:"Detección de errores", q:"Al revisar una prueba de pareamiento, una docente encuentra columnas con contenidos heterogéneos y el mismo número de preguntas y respuestas. ¿Qué debe reconocer?", options:[
+  "Son errores de elaboración: las columnas deben ser consistentes y conviene incluir más respuestas que premisas mediante distractores.",
+  "Son decisiones recomendadas: ambas columnas deben contener igual cantidad y pueden mezclar contenidos para ampliar la cobertura.",
+  "Solo son errores si las instrucciones no indican el puntaje; el contenido de las columnas y su cantidad no afectan la calidad.",
+  "Son decisiones adecuadas para reducir el azar, siempre que las respuestas estén ordenadas y las premisas sean más extensas."
+ ], correct:0, why:"El material identifica como errores el contenido inconsistente o heterogéneo y el mismo número de preguntas en ambas columnas."},
+ {stage:"Misión 2 · Verdadero/Falso", topic:"Qué evalúa", q:"¿Qué aprendizaje puede evaluar especialmente una prueba de alternativa constante, según el material proporcionado?", options:[
+  "Distinguir entre dos alternativas, como hechos y opiniones, conclusiones válidas y no válidas o relaciones de causa y efecto.",
+  "Redactar respuestas extensas y originales, organizando argumentos personales con una secuencia de párrafos bien fundamentados.",
+  "Crear productos artísticos a partir de materiales diversos, explicando las decisiones estéticas tomadas durante el proceso creativo.",
+  "Ejecutar procedimientos físicos complejos, demostrando destrezas motoras y manipulando herramientas en una situación práctica."
+ ], correct:0, why:"El documento señala que estos ítems permiten distinguir entre dos alternativas, clasificar en categorías e identificar relaciones de causa y efecto."},
+ {stage:"Misión 2 · Verdadero/Falso", topic:"Redacción de enunciados", q:"¿Cuál es la mejor decisión al redactar los enunciados de una prueba de Verdadero/Falso?", options:[
+  "Usar palabras precisas, plantear situaciones nuevas y redactar afirmaciones claras cuya extensión sea aproximadamente semejante.",
+  "Copiar literalmente las frases del texto estudiado y hacer que las afirmaciones verdaderas sean mucho más breves que las falsas.",
+  "Usar términos imprecisos para admitir varias interpretaciones y redactar enunciados largos que incluyan diferentes ideas a la vez.",
+  "Repetir expresiones del material de estudio y utilizar palabras generales para que el alumno recuerde el texto con facilidad."
+ ], correct:0, why:"El material recomienda usar palabras precisas, no copiar los enunciados del texto utilizado por el alumno, plantear situaciones nuevas y mantener las alternativas de extensión aproximadamente igual."},
+ {stage:"Misión 2 · Verdadero/Falso", topic:"Palabras que conviene evitar", q:"¿Qué práctica se recomienda evitar porque puede dar pistas sobre la falsedad de un enunciado?", options:[
+  "Usar términos absolutos como «todo», «siempre», «nunca» o «ningún», que pueden revelar la respuesta al estudiante.",
+  "Usar expresiones cuantitativas precisas y vocabulario relacionado con el contenido que se pretende evaluar en la prueba.",
+  "Distribuir las afirmaciones verdaderas y falsas sin un patrón evidente y mantener instrucciones breves, claras y precisas.",
+  "Proponer enunciados que evalúen contenidos relevantes y situaciones nuevas vinculadas con el aprendizaje trabajado."
+ ], correct:0, why:"La sección de sugerencias aconseja evitar términos como «todo», «siempre», «nunca», «ningún» y otros absolutos porque pueden funcionar como pistas."},
+ {stage:"Misión 2 · Verdadero/Falso", topic:"Proporción de respuestas", q:"¿Qué distribución de afirmaciones verdaderas y falsas presenta el material como una recomendación posible?", options:[
+  "Usar una proporción aproximada de 40 % de enunciados verdaderos y 60 % de enunciados falsos.",
+  "Usar una proporción aproximada de 60 % de enunciados verdaderos y 40 % de enunciados falsos.",
+  "Usar exactamente la mitad de enunciados verdaderos y la mitad de enunciados falsos en todas las pruebas.",
+  "Usar únicamente enunciados verdaderos y reservar los falsos para una actividad de corrección posterior."
+ ], correct:0, why:"El material recomienda una proporción de aseveraciones verdaderas y falsas y señala como posibilidad 60 % falsas y 40 % verdaderas."},
+ {stage:"Misión 2 · Verdadero/Falso", topic:"Ventajas y limitaciones", q:"¿Qué afirmación describe correctamente una ventaja y una desventaja de los ítems de Verdadero/Falso?", options:[
+  "Se corrigen con facilidad y permiten muchos ejercicios en poco tiempo, pero existe un 50 % de probabilidad de acertar al azar.",
+  "Permiten eliminar totalmente la adivinación y evaluar cualquier aprendizaje complejo, pero requieren una corrección extensa y subjetiva.",
+  "Solo pueden utilizarse en una asignatura y necesitan respuestas largas, aunque ofrecen una medición libre de la influencia del azar.",
+  "Son difíciles de puntuar y no permiten recoger mucha información, aunque cada respuesta correcta demuestra comprensión profunda."
+ ], correct:0, why:"El texto destaca su corrección sencilla y rapidez, pero advierte que la probabilidad de adivinar una respuesta correcta es del 50 % y que el azar afecta la fiabilidad."},
+ {stage:"Misión 2 · Verdadero/Falso", topic:"Errores de redacción", q:"Una docente redacta un enunciado negativo, muy extenso y con varias ideas relacionadas. ¿Cuál es la mejor observación según las sugerencias del material?", options:[
+  "Conviene simplificarlo y evitar la negación, porque los enunciados largos y complejos pueden confundir al alumno.",
+  "Conviene conservarlo y añadir más negaciones, porque la dificultad de lectura demuestra un mayor dominio del contenido.",
+  "Conviene dividirlo en varias preguntas sin cambiar el texto, porque la extensión no influye en la comprensión del ítem.",
+  "Conviene mantener todas las ideas y colocar la respuesta correcta al final, porque así se reduce la posibilidad de adivinar."
+ ], correct:0, why:"El material recomienda evitar enunciados negativos y proposiciones extensas y complejas que puedan confundir al alumno."},
+ {stage:"Misión final · Decisión docente", topic:"Aplicación", q:"Un futuro docente quiere reducir la adivinación en una prueba de Verdadero/Falso. ¿Qué alternativa coincide con una variante descrita en el material?", options:[
+  "Solicitar que el alumno fundamente sus elecciones o que identifique y corrija la palabra o frase que vuelve falso el enunciado.",
+  "Aumentar la cantidad de afirmaciones y mantener todas las respuestas sin justificación ni oportunidad de corregir los enunciados.",
+  "Hacer que los enunciados falsos sean más largos y complejos, y ubicar las respuestas correctas en una secuencia repetitiva.",
+  "Eliminar las instrucciones y pedir que el alumno explique oralmente solo las afirmaciones que haya marcado como verdaderas."
+ ], correct:0, why:"El material presenta variantes como fundamentar la decisión y reconocer el error, identificando o corrigiendo la palabra o frase que hace falso el enunciado."},
+ {stage:"Misión final · Decisión docente", topic:"Corrección", q:"Si una docente decide aplicar la fórmula de corrección que resta errores a aciertos en una prueba de dos opciones, ¿qué debe hacer según el material?", options:[
+  "Explicar esa regla en las instrucciones y advertir que responder al azar puede disminuir la puntuación obtenida.",
+  "Aplicar la fórmula sin avisar, porque las reglas de puntuación solo deben comunicarse después de entregar la prueba.",
+  "Restar las respuestas omitidas a los aciertos y no considerar los errores, para favorecer que todos respondan cada ítem.",
+  "Otorgar siempre un punto por cada respuesta marcada, porque la probabilidad de adivinación no afecta la calificación."
+ ], correct:0, why:"El texto indica que, si se emplea la fórmula aciertos menos errores, debe escribirse en la instrucción y advertirse que una respuesta al azar puede disminuir la puntuación."}
+];
+const detectiveCases = [
+ {title:"Columnas que no se corresponden", kind:"Prueba de pareamiento", scene:"Una docente mezcla en una columna nombres de ríos, fechas históricas y definiciones de ciencias. En la otra coloca respuestas de esos temas, sin explicar qué relación debe establecerse.", ask:"¿Cuál es el principal problema que debe corregir?", options:["Reorganizar los elementos para que las columnas sean consistentes y compartir instrucciones claras sobre la relación que debe establecerse.","Mantener los elementos variados y confiar en que cada alumno deduzca la relación a partir de sus conocimientos generales.","Agregar más respuestas de temas diferentes y dejar la instrucción para después de que los alumnos hayan leído ambas columnas.","Ordenar las respuestas por longitud y destacar los términos importantes para que la búsqueda resulte más rápida."], correct:0, why:"El material recomienda que los elementos de ambas columnas sean consistentes y de la misma naturaleza, con instrucciones claras."},
+ {title:"La pista involuntaria", kind:"Prueba de pareamiento", scene:"En una prueba, las respuestas aparecen exactamente en el mismo orden que las premisas. Además, cada respuesta está en la misma página, alineada como si formara una pareja directa.", ask:"¿Qué cambio ayudaría a evitar pistas involuntarias?", options:["Ordenar una de las columnas con un criterio lógico y revisar que la disposición no revele directamente las asociaciones.","Conservar el orden actual y añadir una explicación extensa debajo de cada respuesta para reforzar el aprendizaje.","Repetir las palabras de cada premisa en su respuesta correspondiente para que los estudiantes encuentren la relación con facilidad.","Trasladar todas las respuestas a otra página y mantener las premisas ordenadas en el mismo orden que el contenido de estudio."], correct:0, why:"El material aconseja ordenar una de las columnas alfabética, cronológica o lógicamente, evitando pistas y manteniendo el ítem completo en una página."},
+ {title:"El enunciado sospechoso", kind:"Alternativa constante (V/F)", scene:"Un enunciado dice: «Todos los estudiantes siempre resuelven correctamente cualquier ejercicio cuando estudian». La afirmación incluye varios términos absolutos.", ask:"¿Qué recomendación se relaciona mejor con este caso?", options:["Revisar los términos absolutos y redactar una afirmación precisa que no revele la respuesta por el uso de palabras extremas.","Mantener la frase porque los términos absolutos garantizan que el enunciado sea más exigente y mida mejor la comprensión.","Añadir otras dos ideas a la misma afirmación para que el estudiante tenga que analizar más información antes de decidir.","Cambiar la afirmación por una pregunta abierta, aunque el instrumento se haya diseñado para respuestas de Verdadero o Falso."], correct:0, why:"El material aconseja evitar términos absolutos como «todo», «siempre», «nunca» y «ningún», porque pueden dar pistas."},
+ {title:"Demasiadas ideas juntas", kind:"Alternativa constante (V/F)", scene:"Una afirmación contiene una negación, tres ideas distintas y una oración muy larga. Los alumnos comentan que no saben qué parte deben valorar como verdadera o falsa.", ask:"¿Cuál sería la mejor revisión?", options:["Simplificar el enunciado, evitar la negación innecesaria y plantear una idea clara para que pueda juzgarse sin confusión.","Conservar todas las ideas y agregar vocabulario técnico para que el estudiante deba leer con mayor detenimiento.","Dejar la frase como está y señalar la respuesta correcta al final de la prueba para que sirva como ejemplo de estudio.","Convertir cada palabra del enunciado en una alternativa independiente, sin revisar la relación lógica entre las ideas."], correct:0, why:"El material recomienda evitar enunciados negativos y proposiciones extensas o complejas que puedan confundir al alumno."}
+];
+const escapeRooms = [
+ {title:"Sala 1 · El archivo de las columnas", intro:"La puerta del archivo se abrirá si identificas las reglas para construir una prueba de pareamiento.", code:"COLUMNA", tasks:[
+  {q:"¿Qué característica deben compartir los elementos de las dos columnas?", options:["Deben ser consistentes y relacionarse por un criterio claro y de la misma naturaleza.","Deben combinar temas variados para que la relación sea difícil de anticipar.","Deben tener exactamente la misma redacción y el mismo orden en ambas columnas."], correct:0, digit:"4", why:"Las columnas deben contener elementos consistentes y la consigna debe explicar claramente la relación."},
+  {q:"¿Qué recurso puede reducir las asociaciones por simple descarte?", options:["Incluir más respuestas que premisas mediante distractores adecuados.","Utilizar exactamente una respuesta por cada premisa y evitar cualquier distractor.","Repetir todas las premisas en la columna de respuestas para facilitar la lectura."], correct:0, digit:"8", why:"El material sugiere incluir distractores adicionales en la columna de respuestas."},
+  {q:"¿Cómo conviene distribuir el ejercicio para evitar pistas y facilitar su lectura?", options:["Ordenar una columna con criterio lógico, evitar pistas y mantener el ítem en una página.","Ordenar ambas columnas como parejas directas y separar las respuestas en otra página.","Destacar con negrita las respuestas correctas y explicar el criterio al terminar."], correct:0, digit:"2", why:"Se recomienda ordenar una columna con un criterio, evitar pistas y mantener el ítem completo en una misma página."}
+ ]},
+ {title:"Sala 2 · El laboratorio de afirmaciones", intro:"Ahora debes desactivar las trampas de redacción en una prueba de alternativa constante.", code:"VERDAD", tasks:[
+  {q:"¿Qué tipo de redacción conviene priorizar?", options:["Afirmaciones precisas, claras y de extensión aproximadamente semejante.","Afirmaciones ambiguas, largas y con varias ideas que puedan interpretarse de distintas formas.","Afirmaciones copiadas literalmente y con diferencias marcadas de extensión entre verdaderas y falsas."], correct:0, digit:"6", why:"El material recomienda palabras precisas, situaciones nuevas y enunciados de extensión aproximadamente igual."},
+  {q:"¿Qué palabras pueden dar pistas involuntarias?", options:["Términos absolutos como «siempre», «nunca», «todo» o «ningún».","Términos específicos del contenido que se evalúa y expresiones claramente definidas.","Conectores que organizan una frase breve y ayudan a comprender la relación entre sus partes."], correct:0, digit:"1", why:"Los términos absolutos pueden revelar la falsedad de una afirmación y deben evitarse cuando funcionen como pistas."},
+  {q:"¿Qué puede ayudar a reducir el efecto de la adivinación?", options:["Pedir una fundamentación o que se identifique y corrija la parte que vuelve falso el enunciado.","Usar solo afirmaciones verdaderas y no explicar las reglas de puntuación antes de responder.","Hacer que las afirmaciones falsas sean más largas y repetir un patrón fijo en las respuestas."], correct:0, digit:"9", why:"El material describe variantes que solicitan fundamentar la decisión o identificar y corregir la palabra o frase que vuelve falso el enunciado."}
+ ]}
+];
+let index = 0, score = 0, answered = false, picks = [], activeMode = "quiz", shuffledQuestions = [], caseIndex = 0, caseScore = 0, casePicks = [], roomIndex = 0, taskIndex = 0, roomDigits = [], roomScore = 0, roomAnswered = false, studentInfo = { name: "", surname: "", section: "" };
+const main = document.getElementById('main');
+function shuffleOptions(q) { const arr=q.options.map((text,oldIndex)=>({text,oldIndex})); for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];} return {...q,displayOptions:arr,displayCorrect:arr.findIndex(x=>x.oldIndex===q.correct)}; }
+function start() {
+ activeMode="quiz"; index = 0; score = 0; answered = false; picks = []; shuffledQuestions=questions.map(shuffleOptions);
+ renderQuestion();
+}
+function renderHome() {
+ activeMode="home";
+ main.innerHTML = `<section class="card"><span class="stage-label">🔐 Escape room educativo</span><h2>🧭 Misión: Expertos en Evaluación</h2><p class="small">Antes de comenzar, registra tus datos. Luego deberás superar dos salas con desafíos sobre la prueba de pareamiento y la prueba de alternativa constante (Verdadero/Falso).</p><form id="studentForm" onsubmit="registerAndStart(event)"><div class="registration-grid"><label class="field" for="studentName">Nombre<input id="studentName" name="studentName" autocomplete="given-name" required maxlength="60" placeholder="Escribe tu nombre"></label><label class="field" for="studentSurname">Apellido<input id="studentSurname" name="studentSurname" autocomplete="family-name" required maxlength="60" placeholder="Escribe tu apellido"></label><label class="field" for="studentSection">Sección<select id="studentSection" name="studentSection" required><option value="">Selecciona tu sección</option><option value="A">A</option><option value="B">B</option></select></label></div><div class="result-summary"><strong>📌 Antes de entrar</strong><p class="small">Lee cada desafío con atención. Si te equivocas, recibirás una pista y podrás intentarlo nuevamente. Al finalizar verás tu puntuación junto con los datos que registraste.</p></div><button class="btn primary" type="submit">Registrar datos y comenzar →</button></form></section><footer>Actividad de práctica educativa. Los datos y resultados se muestran en esta sesión; no se envían automáticamente a una base de datos ni a Classroom.</footer>`;
+}
+function registerAndStart(event) {
+ event.preventDefault();
+ const form = document.getElementById('studentForm');
+ if (!form.reportValidity()) return;
+ studentInfo = { name: form.studentName.value.trim(), surname: form.studentSurname.value.trim(), section: form.studentSection.value };
+ if (!studentInfo.name || !studentInfo.surname || !studentInfo.section) return;
+ startEscape();
+}
+function renderQuestion() {
+ answered = false;
+ const q = shuffledQuestions[index];
+ const pct = (index/questions.length)*100;
+ main.innerHTML = `<div class="topline"><span class="pill">Pregunta ${index+1} de ${questions.length}</span><span class="pill">⭐ Puntuación: ${score}</span></div><div class="progress" aria-label="Progreso"><div style="width:${pct}%"></div></div><section class="card"><span class="stage-label">${q.stage} · ${q.topic}</span><h2 class="question">${q.q}</h2><div class="options">${q.displayOptions.map((o,i)=>`<button class="option" data-i="${i}" onclick="choose(${i})"><span class="letter">${String.fromCharCode(65+i)}</span><span>${o.text}</span></button>`).join('')}</div><p class="option-note">Las alternativas cambian de posición en cada intento.</p><div id="feedback" class="feedback" aria-live="polite"></div><div class="actions"><button class="btn secondary" onclick="renderHome()">Salir al inicio</button><button id="next" class="btn primary" onclick="nextQuestion()" disabled>${index===questions.length-1?'Ver resultados':'Siguiente pregunta →'}</button></div></section><footer>Consejo: piensa en la norma o sugerencia que fundamenta tu elección.</footer>`;
+}
+function choose(i) {
+ if(answered) return;
+ answered = true;
+ const q = shuffledQuestions[index]; const ok = i === q.displayCorrect;
+ if(ok) score += 10;
+ picks.push({selected:i, correct:q.displayCorrect, ok});
+ document.querySelectorAll('.option').forEach((b,j)=>{
+   b.disabled = true;
+   if(j===q.displayCorrect) b.classList.add('correct');
+   else if(j===i) b.classList.add('incorrect');
+ });
+ const fb = document.getElementById('feedback');
+ fb.className = 'feedback show ' + (ok?'good':'bad');
+ fb.innerHTML = `<strong>${ok?'¡Correcto! +10 puntos':'Respuesta no correcta'}</strong><br>${q.why}`;
+ document.getElementById('next').disabled = false;
+ document.querySelector('.topline .pill:last-child').textContent = '⭐ Puntuación: '+score;
+}
+function nextQuestion() {
+ if(!answered) return;
+ if(index < questions.length-1) { index++; renderQuestion(); }
+ else renderResults();
+}
+function renderResults() {
+ const percent = Math.round(score/(questions.length*10)*100);
+ let msg = percent>=90?'¡Excelente! Dominas las recomendaciones principales.':percent>=70?'¡Buen trabajo! Revisa las explicaciones de los ítems que te resultaron difíciles.':'Buen comienzo. Lee las retroalimentaciones y vuelve a intentarlo para afianzar las normas.';
+ main.innerHTML = `<section class="card"><span class="stage-label">Misión completada</span><h2>¡Terminaste el recorrido!</h2><div class="result-score">${score}/${questions.length*10}</div><p><strong>${percent}% de respuestas correctas</strong></p><p>${msg}</p><div class="result-summary"><strong>Lo que has practicado</strong><p class="small">Normas para organizar las columnas de pareamiento, distractores y errores frecuentes; aprendizajes que puede evaluar la alternativa constante; redacción de enunciados, palabras que conviene evitar, ventajas, desventajas y variantes para reducir la adivinación.</p></div><h3>Revisión de respuestas</h3><div class="review-list">${questions.map((q,i)=>`<div class="review-item"><strong>${i+1}. ${picks[i]?.ok?'✓ Correcta':'↻ Para repasar'} · ${q.topic}</strong><div class="small">${q.why}</div></div>`).join('')}</div><div class="actions"><button class="btn secondary" onclick="renderHome()">Volver al inicio</button><button class="btn primary" onclick="start()">Repetir misión ↻</button></div></section><footer>Este juego es una actividad de práctica; no guarda nombres ni envía resultados a una base de datos.</footer>`;
+}
+function startDetectives(){activeMode="detectives";caseIndex=0;caseScore=0;casePicks=[];renderDetective();}
+function renderDetective(){answered=false;const c=detectiveCases[caseIndex],sh=shuffleOptions(c);window.currentCase=sh;main.innerHTML=`<div class="topline"><span class="pill">Caso ${caseIndex+1} de ${detectiveCases.length}</span><span class="pill">🕵️ Casos resueltos: ${caseScore}</span></div><div class="progress"><div style="width:${caseIndex/detectiveCases.length*100}%"></div></div><section class="card"><span class="stage-label">Detectives de errores · ${c.kind}</span><h2>${c.title}</h2><div class="clue-box"><strong>📁 Evidencia del caso</strong><p>${c.scene}</p></div><h3 class="question">${c.ask}</h3><div class="options">${sh.displayOptions.map((o,i)=>`<button class="option" onclick="chooseCase(${i})"><span class="letter">${String.fromCharCode(65+i)}</span><span>${o.text}</span></button>`).join('')}</div><p class="option-note">Las opciones cambian de orden en cada caso. Analiza la evidencia antes de decidir.</p><div id="caseFeedback" class="feedback" aria-live="polite"></div><div class="actions"><button class="btn secondary" onclick="renderHome()">Volver al menú</button><button class="btn primary" id="caseNext" onclick="nextCase()" disabled>${caseIndex===detectiveCases.length-1?'Ver informe final':'Siguiente caso →'}</button></div></section>`;}
+function chooseCase(i){if(answered)return;answered=true;const c=window.currentCase,ok=i===c.displayCorrect;if(ok)caseScore++;casePicks.push({ok,title:c.title});document.querySelectorAll('.option').forEach((b,j)=>{b.disabled=true;if(j===c.displayCorrect)b.classList.add('correct');else if(j===i)b.classList.add('incorrect');});const f=document.getElementById('caseFeedback');f.className='feedback show '+(ok?'good':'bad');f.innerHTML=`<strong>${ok?'¡Caso resuelto!':'Pista para mejorar'}</strong><br>${c.why}`;document.getElementById('caseNext').disabled=false;document.querySelector('.topline .pill:last-child').textContent='🕵️ Casos resueltos: '+caseScore;}
+function nextCase(){if(!answered)return;if(caseIndex<detectiveCases.length-1){caseIndex++;renderDetective();}else renderDetectiveResults();}
+function renderDetectiveResults(){main.innerHTML=`<section class="card"><span class="stage-label">Informe de investigación</span><h2>🕵️ Informe final de detectives</h2><div class="result-score">${caseScore}/${detectiveCases.length}</div><p>${caseScore===detectiveCases.length?'¡Excelente trabajo! Identificaste todos los errores.':'Buen trabajo. Revisa las pistas y vuelve a intentarlo para consolidar los criterios de elaboración.'}</p><div class="review-list">${casePicks.map((p,i)=>`<div class="review-item"><strong>${p.ok?'✓':'↻'} ${p.title}</strong><div class="small">${p.ok?'Identificaste la dificultad principal.':'Vuelve a leer la explicación del caso para reconocer la norma relacionada.'}</div></div>`).join('')}</div><div class="actions"><button class="btn secondary" onclick="renderHome()">Menú principal</button><button class="btn primary" onclick="startDetectives()">Repetir investigación ↻</button></div></section>`;}
+function startEscape(){activeMode="escape";roomIndex=0;taskIndex=0;roomDigits=[];roomScore=0;roomAnswered=false;renderEscapeIntro();}
+function renderEscapeIntro(){main.innerHTML=`<section class="card"><span class="stage-label">Escape room educativo</span><h2>🔐 El archivo de evaluación está bloqueado</h2><p>Para salir, deberás superar dos salas: primero, las reglas de la prueba de pareamiento; después, las recomendaciones para redactar ítems de Verdadero/Falso.</p><div class="room-locks"><div class="lock"><strong>🚪 Sala 1</strong><span>Prueba de pareamiento</span></div><div class="lock"><strong>🚪 Sala 2</strong><span>Alternativa constante</span></div><div class="lock"><strong>🔑 Código</strong><span>6 dígitos por descubrir</span></div></div><div class="result-summary"><strong>Cómo jugar</strong><p class="small">Cada sala contiene tres preguntas. Una respuesta correcta te revela un dígito; si fallas, recibirás una explicación y podrás continuar, pero tendrás que revisar el contenido para completar el código con éxito.</p></div><button class="btn primary" onclick="renderEscapeTask()">Comenzar escape room →</button></section>`;}
+function renderEscapeTask(){roomAnswered=false;const room=escapeRooms[roomIndex],t=room.tasks[taskIndex],sh=shuffleOptions(t);window.currentRoomTask=sh;main.innerHTML=`<div class="topline"><span class="pill">Sala ${roomIndex+1} de ${escapeRooms.length} · Reto ${taskIndex+1} de ${room.tasks.length}</span><span class="pill">🔑 Dígitos encontrados: ${roomDigits.length}/6</span></div><div class="progress"><div style="width:${((roomIndex*3+taskIndex)/6)*100}%"></div></div><section class="card"><span class="stage-label">${room.title}</span><h2>${room.intro}</h2><div class="clue-box">🧩 <strong>Reto ${taskIndex+1}:</strong> responde correctamente para revelar un dígito del código.</div><h3 class="question">${t.q}</h3><div class="options">${sh.displayOptions.map((o,i)=>`<button class="option" onclick="chooseEscape(${i})"><span class="letter">${String.fromCharCode(65+i)}</span><span>${o.text}</span></button>`).join('')}</div><div id="roomFeedback" class="feedback" aria-live="polite"></div><div class="actions"><button class="btn secondary" onclick="renderHome()">Salir del escape room</button><button class="btn primary" id="roomNext" onclick="nextEscapeTask()" disabled>${taskIndex===2&&roomIndex===1?'Abrir la salida':taskIndex===2?'Abrir sala 2':'Siguiente reto →'}</button></div></section>`;}
+function chooseEscape(i){if(roomAnswered)return;const t=window.currentRoomTask,ok=i===t.displayCorrect;const f=document.getElementById('roomFeedback');if(ok){roomAnswered=true;roomScore++;roomDigits.push(escapeRooms[roomIndex].tasks[taskIndex].digit);document.querySelectorAll('.option').forEach((b,j)=>{b.disabled=true;if(j===t.displayCorrect)b.classList.add('correct');});f.className='feedback show good';f.innerHTML=`<strong>🔑 Dígito revelado: ${escapeRooms[roomIndex].tasks[taskIndex].digit}</strong><br>${t.why}`;document.getElementById('roomNext').disabled=false;document.querySelector('.topline .pill:last-child').textContent='🔑 Dígitos encontrados: '+roomDigits.length+'/6';}else{const buttons=document.querySelectorAll('.option');buttons[i].classList.add('incorrect');setTimeout(()=>buttons[i]?.classList.remove('incorrect'),650);f.className='feedback show bad';f.innerHTML=`<strong>🔍 Todavía no. ¡Inténtalo de nuevo!</strong><br>${t.why}`;}}
+function nextEscapeTask(){if(!roomAnswered)return;if(taskIndex<2){taskIndex++;renderEscapeTask();}else if(roomIndex===0){roomIndex=1;taskIndex=0;renderEscapeDoor();}else renderEscapeResults();}
+function renderEscapeDoor(){const code=roomDigits.join('');main.innerHTML=`<section class="card"><span class="stage-label">Primera puerta superada</span><h2>🚪 Has llegado al laboratorio de afirmaciones</h2><p>Terminaste la sala de pareamiento. Ahora abre la segunda sala para poner a prueba tus conocimientos sobre los enunciados de Verdadero/Falso.</p><div class="room-locks"><div class="lock"><strong>${roomDigits.slice(0,3).join(' · ')||'—'}</strong><span>Dígitos de la sala 1</span></div><div class="lock"><strong>3 retos</strong><span>Faltan para la salida</span></div><div class="lock"><strong>⭐ ${roomScore} puntos</strong><span>Respuestas correctas</span></div></div><button class="btn primary" onclick="renderEscapeTask()">Desbloquear sala 2 →</button></section>`;}
+function renderEscapeResults(){const success=roomDigits.length===6;main.innerHTML=`<section class="card"><span class="stage-label">Misión de escape completada</span><h2>${success?'🎉 ¡Has abierto el archivo!':'🔓 Has llegado al final del recorrido'}</h2><div class="result-summary"><strong>Registro del participante</strong><p class="small"><strong>Nombre y apellido:</strong> ${escapeHtml(studentInfo.name)} ${escapeHtml(studentInfo.surname)}<br><strong>Sección:</strong> ${escapeHtml(studentInfo.section)}</p></div><div class="result-score">${roomScore}/6</div><p>${success?'¡Excelente! Encontraste los seis dígitos y superaste ambas salas.':'Completaste los seis retos. Revisa las explicaciones y vuelve a jugar para conseguir todos los dígitos del código.'}</p><div class="result-summary"><strong>Código conseguido</strong><p class="small">${roomDigits.length?roomDigits.join(' – '):'No se encontraron dígitos en este intento.'}</p><p class="small">La clave del aprendizaje es aplicar las normas: coherencia entre columnas, instrucciones claras, distractores apropiados y enunciados precisos sin pistas involuntarias.</p></div><p class="small">Este registro aparece en pantalla durante esta sesión. Para entregar el resultado al docente, toma una captura de pantalla; el juego no envía datos automáticamente.</p><div class="actions"><button class="btn secondary" onclick="renderHome()">Volver al registro</button><button class="btn primary" onclick="startEscape()">Volver a jugar ↻</button></div></section>`;}
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));}
+let escapeAttemptCount = 0;
+const originalStartEscape = startEscape;
+startEscape = function() {
+  escapeAttemptCount += 1;
+  originalStartEscape();
+};
+const screenNoticeObserver = new MutationObserver(() => {
+  const card = main.querySelector('.card');
+  if (!card) return;
+  const heading = card.querySelector('h2')?.textContent || '';
+  const stage = card.querySelector('.stage-label');
+  if (document.getElementById('screenshot-start-note') || document.getElementById('screenshot-end-note')) return;
+  if (document.getElementById('studentForm')) {
+    const summary = card.querySelector('.result-summary');
+    if (summary) {
+      const note = document.createElement('p');
+      note.id = 'screenshot-start-note';
+      note.className = 'small';
+      note.innerHTML = '<strong>📸 Importante:</strong> al terminar la actividad, captura la pantalla del resultado final y adjunta esa imagen en Classroom como evidencia de que realizaste el juego.';
+      summary.appendChild(note);
+    }
+    return;
+  }
+  if (heading.includes('archivo de evaluación está bloqueado')) {
+    if (stage) stage.textContent += ' · Intento ' + escapeAttemptCount;
+    const summary = card.querySelector('.result-summary');
+    if (summary) {
+      const note = document.createElement('p');
+      note.id = 'screenshot-start-note';
+      note.className = 'small';
+      note.innerHTML = '<strong>📸 Recuerda:</strong> al finalizar, toma una captura de pantalla donde se vea tu nombre, apellido, sección, puntuación y código; luego adjúntala en Classroom.';
+      summary.appendChild(note);
+    }
+    return;
+  }
+  if (heading.includes('Has abierto el archivo') || heading.includes('Has llegado al final del recorrido')) {
+    if (stage) stage.textContent += ' · Intento ' + escapeAttemptCount;
+    const note = document.createElement('p');
+    note.id = 'screenshot-end-note';
+    note.className = 'result-summary';
+    note.innerHTML = '<strong>📸 Evidencia para Classroom</strong><p class="small">Captura esta pantalla completa, verificando que se vean tu nombre y apellido, sección, número de intento, puntuación y código conseguido. Después, adjunta la captura en la tarea correspondiente de Classroom. El resultado no se envía automáticamente.</p>';
+    card.appendChild(note);
+  }
+});
+screenNoticeObserver.observe(main, { childList: true, subtree: true });
+renderHome();
+</script>
+</body>
+</html>
